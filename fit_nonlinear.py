@@ -68,10 +68,12 @@ def lsqfit(f,dyda,p0,x,y,sigma=None,nmax=1000,delta=0.1):
 def main():
 
     x = np.arange(0,10*np.pi/3,0.1)
-    y = np.zeros((len(x),100))
-    for i in range(len(x)):
-        y[i,:] = np.random.normal(loc=np.sin(0.3*x[i])+4,size=100)
-    sigma = np.std(y,1) / (len(x)-1)
+    ndate = len(x)
+    nconf=100
+    y = np.zeros((ndate,nconf))
+    for i in range(ndate):
+        y[i,:] = np.random.normal(loc=np.sin(0.3*x[i])+4, scale=0.1,size=nconf)
+    sigma = np.std(y,1) / (nconf-1)**0.5
     y_ave = np.average(y,1)
 
     def func(x,a,b):
@@ -80,7 +82,7 @@ def main():
     def dyda(x,a,b):
         return np.array([x*np.cos(a*x),np.ones(len(x))]).T
 
-    params = lsqfit(func,dyda,(0.5,0.2),x,y_ave,sigma=sigma,delta=0.01)
+    params = lsqfit(func,dyda,(0.2,0.2),x,y_ave,sigma=sigma,delta=0.01)
 
     plt.errorbar(x,y_ave,sigma,fmt='o',label='data')
     plt.plot(x,func(x,*params),'-',label="fit")
@@ -91,7 +93,7 @@ def main():
 
     print("lsqfit params:",params)
 
-    popt,pcov = curve_fit(func,x,y_ave,sigma=sigma)
+    popt,pcov = curve_fit(func,x,y_ave,p0=(0.2,0.2),sigma=sigma)
 
     plt.errorbar(x,y_ave,sigma,fmt='o',label='data')
     plt.plot(x,func(x,*popt),'-',label="fit")
