@@ -40,6 +40,7 @@ def aitken(xi,fi,x):
 
 def main():
 
+#=========例题3.1.4===========================
     xi = np.linspace(0,np.pi,9)
     fi = np.sin(xi)
 
@@ -58,6 +59,10 @@ def main():
     plt.ylabel("y")
     plt.legend()
     plt.show()
+
+
+
+
 
 if __name__ == "__main__":
     main()

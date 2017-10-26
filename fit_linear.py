@@ -1,6 +1,7 @@
 import numpy as np
 from scipy import optimize
 import matplotlib.pyplot as plt
+# from matplotlib.font_manager import FontProperties
 
 def linearfit(x,y):
     """fit y = ax+b
@@ -21,14 +22,14 @@ def linearfit(x,y):
 
     return a,b
 
+def f(x,a,b):
+    """定义线性函数"""
+    return a*x + b
 
 def main():
+    print("==========例题3.2.1==========")
     x = np.array([0.5, 1.2, 2.1, 2.9, 3.6, 4.5, 5.7])
     y = np.array([2.81, 3.24, 3.80, 4.30, 4.73, 5.29, 6.03])
-
-    def f(x,a,b):
-        return a*x + b
-
 
     a,b = linearfit(x,y)
     print("linear parameter is ",a,b)
@@ -45,6 +46,21 @@ def main():
 
     plt.plot(x,y,'o',label='data')
     plt.plot(x,f(x,*popt),'-',label="curve_fit")
+    plt.xlabel("x")
+    plt.ylabel("y")
+    plt.legend()
+    plt.show()
+
+    print("==========作业3.2.4==========")
+    x = np.array([0.3,0.5,0.6,0.7,0.9])
+    sinx = np.sin(x)
+    y = np.array([1.37731,1.48766,1.53879,1.58653,1.67])
+
+    a,b = linearfit(sinx,y)
+    print("linear parameter is ",a,b)
+
+    plt.plot(x,y,'o',label='data')
+    plt.plot(x,f(sinx,a,b),'-',label="fit")
     plt.xlabel("x")
     plt.ylabel("y")
     plt.legend()
