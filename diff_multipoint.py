@@ -32,12 +32,37 @@ def multipoint(f,x0,h,flag='f'):
 
     return df
 
+def dfdx_center(f,x):
+    h = x[1] - x[0]
+    N = len(x)
+    y = f(x)
+    dfdx = np.zeros(len(x))
+    dfdx[1:N-1] = (y[2:N] - y[0:N-2]) / (2*h)
+    dfdx[0] = 2*dfdx[1] - dfdx[2]
+    dfdx[N-1] = 2*dfdx[N-2] - dfdx[N-3]
+    return dfdx
+
 
 def main():
     """TODO: Docstring for main.
     :returns: TODO
 
     """
+    print("==========例题4.1.1==========")
+    x  = np.linspace(0,2*np.pi,65)
+    dfdx = dfdx_center(np.cos,x)
+    print(dfdx[[0,8,16]])
+
+
+    plt.xlabel("x")
+    plt.ylabel("y")
+    plt.plot(x,dfdx,'ro',x,-np.sin(x),'k.-')
+    plt.grid()
+    plt.legend(("center differenc","-sin(x)"))
+    # plt.legend("1","2","原函数","导数函数")
+    plt.show()
+
+
     print("==========例题4.1.2==========")
 
     x  = np.linspace(0,np.pi,16)

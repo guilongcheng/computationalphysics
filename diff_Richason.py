@@ -21,7 +21,8 @@ def Richason(f,x0,n,h):
 
     for i in range(n-1):
         for j in range(i+1,n):
-            G1[j] = (G[j] - 0.5**(2*(i+1))*G[j-1]) / (1 - 0.5**(2*(i+1)))
+            G1[j] = (G[j] - 0.5**(2*(i+1))*G[j-1]) \
+                    / (1 - 0.5**(2*(i+1)))
 
         G[:] = G1[:]
 
@@ -33,6 +34,8 @@ def main():
     def f(x):
         return 2**x
     print("y=2**x 在x=1处的导数为:%.15f, 精确值:%.15f"%(Richason(f,1,8,0.1),2*np.log(2)))
+
+    print("y=cos(x) 在x=pi/4处的导数为:%.15f, 精确值:%.15f"%(Richason(np.cos,np.pi/4,8,2*np.pi/64),-np.sin(np.pi/4)))
 
 if __name__ == "__main__":
     main()

@@ -32,7 +32,8 @@ def SimpInt1(f,a,b,ndouble_sub):
     h = (b-a)/(n-1)
     x = np.linspace(a,b,n)
     y = f(x)
-    S = (h/3)*(y[0] +4 * np.sum(y[1:n:2]) + 2 * np.sum(y[2:n-1:2]) + y[n-1])#注意指标！
+    S = (h/3)*(y[0] +4 * np.sum(y[1:n:2]) +\
+               2 * np.sum(y[2:n-1:2]) + y[n-1])#注意指标！
 
     return S
 
