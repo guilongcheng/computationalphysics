@@ -1,5 +1,6 @@
 #!/bin/env python
 import numpy as np
+import integ_Romberg
 
 def NaivTrap(f,a,b,eps):
     """变步长梯形积分
@@ -116,6 +117,19 @@ def main():
 
     print("变步长梯形公式的结果为：",aTrapInt(f,0,1,10**(-6)))
     print("变步长辛普森公式的结果为：",aSimpInt(f,0,1,10**(-6)))
+
+    print("==========作乐4.2.6==========")
+
+    def f(x):
+        return 4/(1+x**2)
+
+    print("变步长梯形公式的结果为：",aTrapInt(f,0,1,10**(-5)))
+    print("变步长辛普森公式的结果为：",aSimpInt(f,0,1,10**(-5)))
+    T,k=integ_Romberg.Roberg(f,0,1,10**(-5))
+    print("Table:")
+    print(T[:k+1,:k+1])
+
+
 
 if __name__ == "__main__":
     main()

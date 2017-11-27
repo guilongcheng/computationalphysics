@@ -1,7 +1,7 @@
 #!/bin/env python
 import numpy as np
 
-def Roberg(f,a,b,eps,nmax=1000):
+def Roberg(f,a,b,eps=10**(-6),nmax=1000,flag=""):
     """龙贝格积分
 
     :f: TODO
@@ -27,22 +27,23 @@ def Roberg(f,a,b,eps,nmax=1000):
             T[k,j+1] = T[k,j] + (T[k,j] - T[k-1,j]) / (4**(j+1) - 1)
         tol = abs(T[k,k] - T[k-1,j-1])
     print("step is ",k)
-    return T,k
+    print("龙贝格积分结果为:",T[k,k])
+    if "show" in flag:
+        print("龙贝格表",T[:k+1,:k+1])
+    return T[k,k]
 
 def main():
     print("==========例题4.2.7==========")
     def f(x):
         return np.log(1+x)/(1+x**2)
     T,k = Roberg(f,0,1,10**(-6))
-    print("龙贝格积分结果为:",T[k,k])
+    print("龙贝格积分结果为:",T)
 
     print("==========例题4.2.8==========")
     def f(x):
         return 4/(1+x**2)
     T,k = Roberg(f,0,1,10**(-6))
-    print("龙贝格积分结果为:",T[k,k])
-    print("Table:")
-    print(T[:k+1,:k+1])
+    print("龙贝格积分结果为:",T)
 
 if __name__ == "__main__":
     main()

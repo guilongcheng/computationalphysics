@@ -79,6 +79,18 @@ def main():
     # plt.legend("1","2","原函数","导数函数")
     plt.show()
 
+    print("==========作业4.1.1==========")
+
+
+    xp = np.arange(2.5,3.0,0.1)
+    yp = np.array([12.1825, 13.4637, 14.8797, 16.4446, 18.1741])
+    def f(x):
+        return np.interp(x,xp,yp)
+
+    print("(1) answer is ",multipoint(f,2.7,0.1,'f'),multipoint(f,2.7,0.1,'b'),multipoint(f,2.7,0.1,'c'))
+    print("(2) answer is ",(yp[3]+yp[1]-2*yp[2])/0.01)
+
+
 if __name__ == "__main__":
     main()
 

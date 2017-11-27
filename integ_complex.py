@@ -4,11 +4,11 @@ import numpy as np
 def TrapInt1(f,a,b,nsub):
     """TODO: Docstring for TrapInt1.
 
-    :f: TODO
-    :a: TODO
-    :b: TODO
-    :nsub: TODO
-    :returns: TODO
+    :f: 函数
+    :a: 下限
+    :b: 上限
+    :nsub: 区间数
+    :returns: 积分结果
 
     """
     n=nsub+1
@@ -24,7 +24,7 @@ def SimpInt1(f,a,b,ndouble_sub):
     :f: TODO
     :a: TODO
     :b: TODO
-    :ndouble_sub: TODO
+    :ndouble_sub: 2n个区间,n的取值
     :returns: TODO
 
     """
