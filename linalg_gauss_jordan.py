@@ -34,9 +34,20 @@ def gauss_jordan(A,b, eps = 1.0/(10**10)):
 
 
 def main():
+    print("==========习题2.1.1==========")
     #Becareful the number type! if use int will not right!
     A = np.array([[1,2,1],[2,2,3],[-1,0,-3]],'f8')
     b = np.array([0,3,0],'f8')
+    x = gauss_jordan(A,b)
+    print("Solve is \n",x)
+
+    x = np.linalg.solve(A,b)
+    print("np solve is \n",x)
+    
+    print("==========习题2.1.2==========")
+    #Becareful the number type! if use int will not right!
+    A = np.array([[2,3,5],[3,4,8],[1,3,3]],'f8')
+    b = np.array([5,6,5],'f8')
     x = gauss_jordan(A,b)
     print("Solve is \n",x)
 

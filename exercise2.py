@@ -2,7 +2,7 @@
 """
 Created on Fri Nov 24 16:51:13 2017
 
-@author: guilo
+@author: guilongcheng
 """
 
 import numpy as np
@@ -10,13 +10,16 @@ from scipy.integrate import simps
 import matplotlib.pyplot as plt
 from Deq_RK import RungKutta
 
+def potential(x,y,k):
+    return np.array([y[1],-k**2*y[0]])
+
 def main():
     #测试
-    print("==========例题5.3.4==========")
+    print("==========求解一维定态薛定谔方程==========")
+    def func(x,y,V,k):
+        return np.array([y[1],-(k-V(x))*y[0]])
     x = np.linspace(0,1,1000)
     k = 1
-    def func(x,y,k):
-        return np.array([y[1],-k**2*y[0]])
     m=3
     eigenV = np.zeros(m)
     tol = 10**(-8)
