@@ -39,6 +39,10 @@ def main():
     c = -np.ones(100,'f8')
     f = np.arange(1,101,dtype='f8')
 
+    x = tridag(a,b,c,f)
+    print("sovle is \n",x)
+
+# one way to construct matrix
     d = np.zeros((100,100))
     for i in range(100):
         d[i,i] = b[i]
@@ -46,8 +50,11 @@ def main():
             d[i+1,i] = a[i+1]
             d[i,i+1] = c[i]
 
-    x = tridag(a,b,c,f)
-    print("sovle is \n",x)
+    x = linalg.solve(d,f)
+    print("solve is \n",x)
+
+# other way to construct matrix
+    d = np.diagflat(b) + np.diagflat(a[:-1],1) + np.diagflat(c[:-1],-1)
 
     x = linalg.solve(d,f)
     print("solve is \n",x)

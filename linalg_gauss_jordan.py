@@ -1,9 +1,14 @@
 import numpy as np
 
-def gauss_jordan(A,b, eps = 1.0/(10**10)):
-    n = len(b)
-    dtype = A.dtype
-    # print("init A is \n", A)
+def gauss_jordan(A_, b_, flag="hide"):
+    n = len(b_)
+    dtype = A_.dtype
+    A = np.zeros(A_.shape,'f8')
+    b = np.zeros(b_.shape,'f8')
+    A[:,:] = A_[:,:]
+    b[:] = b_[:]
+    if "show" in flag:
+        print("init A is \n", A)
     for i in range(n-1):
         t = np.argmax(np.abs(A[i:,i]))+i
         if (np.abs(A[t,i]) <= 10**(-16)):
@@ -21,7 +26,8 @@ def gauss_jordan(A,b, eps = 1.0/(10**10)):
         A[i+1:,i+1:] = A[i+1:,i+1:] + np.outer(m,A[i,i+1:])
         b[i+1:] = b[i+1:] + m*b[i]
 
-        # print("A[i+1:,i+1:] is \n",A[i+1:,i+1:])
+        if "show" in flag:
+            print("step %i, A is \n"%i,A)
 
     # print("final A is \n",A)
     x=np.zeros(n,dtype=dtype)
@@ -38,17 +44,19 @@ def main():
     #Becareful the number type! if use int will not right!
     A = np.array([[1,2,1],[2,2,3],[-1,0,-3]],'f8')
     b = np.array([0,3,0],'f8')
-    x = gauss_jordan(A,b)
+    x = gauss_jordan(A,b,flag="show")
     print("Solve is \n",x)
 
+    print("A . x = ",np.dot(A,x))
+    print("b is ",b)
     x = np.linalg.solve(A,b)
     print("np solve is \n",x)
-    
+
     print("==========习题2.1.2==========")
     #Becareful the number type! if use int will not right!
     A = np.array([[2,3,5],[3,4,8],[1,3,3]],'f8')
     b = np.array([5,6,5],'f8')
-    x = gauss_jordan(A,b)
+    x = gauss_jordan(A,b,flag="show")
     print("Solve is \n",x)
 
     x = np.linalg.solve(A,b)

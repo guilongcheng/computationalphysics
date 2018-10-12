@@ -13,7 +13,7 @@ def TrapInt1(f,a,b,nsub):
     """
     n=nsub+1
     h = (b-a)/nsub
-    x=np.linspace(a,b,n)
+    x=np.linspace(a,b,n,dtype="f8")
     y=f(x)
     T=h*(0.5*y[0]+np.sum(y[1:n-1])+0.5*y[n-1])
     return T
@@ -45,6 +45,16 @@ def main():
 
     print("复化梯形结果:",TrapInt1(f,0,1,16))
     print("复化辛普森结果:",SimpInt1(f,0,1,8))
+
+
+    print("=====计算 integrage[1/(1+x)\sqrt(x),{x,0,1}]=====")
+    def f(x):
+        return 2.0/(1.0+x**2 )
+    print("复化梯形结果:",TrapInt1(f,0,1,3))
+    print("复化梯形结果:",TrapInt1(f,0,1,4))
+    print("复化梯形结果:",TrapInt1(f,0,1,5))
+    print("复化梯形结果:",TrapInt1(f,0,1,6))
+
 
 if __name__ == "__main__":
     main()

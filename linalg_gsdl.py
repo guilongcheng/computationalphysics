@@ -9,6 +9,7 @@ def gsdl(A,b,p0=None,delta=10**-5,max1=100):
     :max: Maximum iterations
     :returns: solve
 
+    Add the Pivoting code by youself.
     """
     n = len(b)
 
