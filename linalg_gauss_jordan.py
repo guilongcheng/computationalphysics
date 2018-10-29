@@ -1,4 +1,5 @@
 import numpy as np
+import time
 
 def gauss_jordan(A_, b_, flag="hide"):
     n = len(b_)
@@ -44,23 +45,35 @@ def main():
     #Becareful the number type! if use int will not right!
     A = np.array([[1,2,1],[2,2,3],[-1,0,-3]],'f8')
     b = np.array([0,3,0],'f8')
+    t_s = time.time()
     x = gauss_jordan(A,b,flag="show")
+    t_e = time.time()
     print("Solve is \n",x)
+    print("All times used are %f (s)"%(t_e-t_s))
 
     print("A . x = ",np.dot(A,x))
     print("b is ",b)
+    t_s = time.time()
     x = np.linalg.solve(A,b)
+    t_e = time.time()
     print("np solve is \n",x)
+    print("All times used are %f (s)"%(t_e-t_s))
 
     print("==========习题2.1.2==========")
     #Becareful the number type! if use int will not right!
     A = np.array([[2,3,5],[3,4,8],[1,3,3]],'f8')
     b = np.array([5,6,5],'f8')
+    t_s = time.time()
     x = gauss_jordan(A,b,flag="show")
+    t_e = time.time()
     print("Solve is \n",x)
+    print("All times used are %f (s)"%(t_e-t_s))
 
+    t_s = time.time()
     x = np.linalg.solve(A,b)
+    t_e = time.time()
     print("np solve is \n",x)
+    print("All times used are %f (s)"%(t_e-t_s))
 
 if __name__ == "__main__":
     main()

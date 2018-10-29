@@ -1,4 +1,5 @@
 import numpy as np
+import mtime
 from scipy import linalg
 
 def tridag(a,b,c,f):
@@ -39,7 +40,10 @@ def main():
     c = -np.ones(100,'f8')
     f = np.arange(1,101,dtype='f8')
 
+    t = mtime.mtime()
+    t.start("tridag")
     x = tridag(a,b,c,f)
+    t.end("tridag")
     print("sovle is \n",x)
 
 # one way to construct matrix
@@ -50,13 +54,23 @@ def main():
             d[i+1,i] = a[i+1]
             d[i,i+1] = c[i]
 
+    t.start("numpy solve")
+    x = np.linalg.solve(d,f)
+    t.end("numpy solve")
+
+    t.start("scipy solve")
     x = linalg.solve(d,f)
+    t.end("scipy solve")
     print("solve is \n",x)
 
 # other way to construct matrix
     d = np.diagflat(b) + np.diagflat(a[:-1],1) + np.diagflat(c[:-1],-1)
+    ab = np.array([a,b,c])
 
-    x = linalg.solve(d,f)
+    t.start("scipy solve_banded")
+    x = linalg.solve_banded((1,1),ab,f)
+    t.end("scipy solve_banded")
+
     print("solve is \n",x)
 
 if __name__ == "__main__":
