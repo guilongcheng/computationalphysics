@@ -13,3 +13,5 @@ integ_*:
     函数积分
 Deq_*:
     常微分方程
+SES*:
+    矩阵QR分解及求解本征系统(SolveEigenSystem)
