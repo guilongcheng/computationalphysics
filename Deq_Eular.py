@@ -4,14 +4,14 @@ import scipy as sp
 import matplotlib.pyplot as plt
 
 def Eular(f,u0,a,b,h):
-    """TODO: Docstring for Eular.
+    """欧拉法求解一阶微分方程 
 
-    :f: TODO
-    :u0: TODO
-    :a: TODO
-    :b: TODO
-    :h: TODO
-    :returns: TODO
+    :f: y(x)
+    :u0: 初始值
+    :a: 初始区间
+    :b: 结束区间 
+    :h: 步长 
+    :returns: y'(x) 和 y(x) 
 
     """
     t_k = np.arange(a,b+h,h)

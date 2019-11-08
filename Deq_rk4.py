@@ -53,16 +53,15 @@ def main():
 
     n = 6; t0=0; h=0.1
     y = np.array([1,1,0,1,0,1])
-    y1 = np.zeros((500,6))
-    t = np.arange(t0,500,h)
 
-    for i in range(500):
-        y = rk4n(f,n,t[i],h,y)
-        y1[i,:] = y
+#    for i in range(500):
+#        y = rk4n(f,n,t[i],h,y)
+#        y1[i,:] = y
+    (t,y1) = rk4s(f,y,(0,50),h)
 
     fig = plt.figure()
     ax = fig.gca(projection='3d')
-    ax.plot(y1[:,0],y1[:,1],y1[:,2])
+    ax.plot(y1[0,:],y1[1,:],y1[2,:])
     plt.show()
 
     print("==========例题5.2.5==========")

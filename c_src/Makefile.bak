@@ -1,0 +1,25 @@
+vpath %.h include/
+
+INC=-I./include
+
+INC2=-I../include
+
+sections=$(patsubst %.c,%, $(wildcard sec*.c))
+
+libs_c=$(wildcard lib/*.c)
+libs=$(patsubst %.c,%.o, $(wildcard lib/*.c))
+
+main:${sections} $(libs)
+
+%.o:%.c:$(libs_c)
+	gcc $(INC) -c $< -o $@
+
+sec2:sec2.c lib/libsec2.o include/libsec2.h
+	gcc sec2.c lib/libsec2.o $(INC) -o $@ 
+
+sec3:sec3.c lib/libsec3.o lib/libsec2.o include/libsec3.h
+	gcc sec3.c lib/libsec3.o lib/libsec2.o $(INC) -o $@ 
+
+clean:
+	rm lib/*.o
+	rm sec2 sec3
