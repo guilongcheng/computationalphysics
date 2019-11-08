@@ -331,8 +331,8 @@ void SolveSchroedingerEQ(double (*v)(double, double[NPARS]), double pars[NPARS],
 #endif
 
     wave(v, pars, u0, u, x0, en0, n);
-    f1 = *(ur + nr - 1) + *(ul + nl - 1) - *(ur + nr - 3) - *(ul + nl - 3);
-    f1 = f1 / (2 * h * (*(ur + nr - 2)));
+    f1 = ur[nr-1] + ul[nl - 1] - ur[nr -3] - ul[nl -3];
+    f1 = f1 / (2 * h * ur[nr -2]);
 
     printf("f1 的值为 %lf \n", f1);
     printf("nl , nr 的值为 %d  %d \n", nl, nr);
@@ -340,8 +340,8 @@ void SolveSchroedingerEQ(double (*v)(double, double[NPARS]), double pars[NPARS],
     //割线法求解
     {
         wave(v, pars, u0, u, x0, en1, n);
-        f2 = *(ur + nr - 1) + *(ul + nl - 1) - *(ur + nr - 3) - *(ul + nl - 3);
-        f2 = f2 / (2 * h * (*(ur + nr - 2)));
+        f2 = ur[nr-1] + ul[nl - 1] - ur[nr -3] - ul[nl -3];
+        f2 = f1 / (2 * h * ur[nr -2]);
 
         en = en1 - f2 * deltaen / (f2 - f1);
 
@@ -359,4 +359,6 @@ void SolveSchroedingerEQ(double (*v)(double, double[NPARS]), double pars[NPARS],
     printf("能级为 %lf \n", en);
     free(ur);
     free(ul);
+    ur=NULL;
+    ul=NULL;
 }
