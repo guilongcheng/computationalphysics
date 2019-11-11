@@ -17,7 +17,7 @@ void FirstOrderDerivative(double h, double f[], double df[], int n, int k)
     {
         xl[i] = h * (i + 1);
         fl[i] = df[i + 1];
-        fr[i] = df[n - i - 1];
+        fr[i] = df[n - i - 2];
     }
     df[0] = aitken(0, k, xl, fl);
     df[n - 1] = aitken(0, k, xl, fr);
@@ -131,7 +131,7 @@ double SimpsonAdaptive(double (*f)(double), double a, double b, double del)
         printf("达到了设定的最大迭代次数\n");
     }
 
-    printf("迭代次数为 %d \n", step);
+   // printf("迭代次数为 %d \n", step);
 
     return s1;
 }
@@ -226,8 +226,8 @@ double Secant(double (*f)(double), double x0, double del)
         dx = x2 - x1;
         step++;
     }
-    printf("割线法:总迭代次数为 %d \n", step);
-    printf("割线法:方程的根为 %15.7e \n", x);
-    printf("割线法:误差为 %15.7e \n", dx);
+//    printf("割线法:总迭代次数为 %d \n", step);
+//    printf("割线法:方程的根为 %15.7e \n", x);
+//    printf("割线法:误差为 %15.7e \n", dx);
     return x;
 }

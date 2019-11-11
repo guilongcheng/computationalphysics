@@ -71,7 +71,7 @@ double SL_f(double l)
         s[i] = SL_s(x, l);
     }
 
-    sturmLiouville(p, p1, q, s, u0, u, l, n, h);
+    sturmLiouville(p, p1, q, s, u0, u, n, h);
 
     return *(u + n - 1) - 1;
 }
@@ -81,6 +81,12 @@ double schroedingerV(double x, double pars[])
     double alpha = pars[0];
     double lambda = pars[1];
     return alpha * alpha * lambda * (lambda - 1) * (0.5 - 1.0 / pow(cosh(alpha * x), 2)) / 2;
+}
+
+double schroedingerV2(double x, double pars[])
+{
+    double k = pars[0];
+    return 1.0 * x*x / 2 ;
 }
 
 int main()
@@ -300,9 +306,11 @@ int main()
         double pars[2] = {1, 4};
         double u[n];
         double x[n];
-        double en0[2] = {2.9, 3.0};
+        double en0[2];
         double en;
-
+        printf("请输入初始能量:\n");
+        scanf("%lf,%lf",&en0[0],&en0[1]);
+        printf("初始能量为:%lf, %lf \n",en0[0],en0[1]);
         double h = (x0[1] - x0[0]) / (n - 1);
         for (int i = 0; i < n; i++)
         {
@@ -310,7 +318,7 @@ int main()
             //   printf("v = %lf \n",schroedingerV(x[i],pars));
         }
 
-        SolveSchroedingerEQ(schroedingerV, pars, u0, u, en0, en, n, x0);
+        SolveSchroedingerEQ(schroedingerV2, pars, u0, u, en0, en, n, x0);
         for (int i = 0; i < 10; i++)
         {
             printf("能级 %d 的解析结果为 %lf \n", i, 1.0 / 2.0 * pars[0] * pars[0] * (pars[1] * (pars[1] - 1) / 2 - pow(pars[1] - 1 - i, 2)));

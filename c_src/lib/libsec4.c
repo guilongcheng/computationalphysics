@@ -221,8 +221,8 @@ void LinearDeqSolve(void (*g)(double, double[2], double[2]), double y0[2], doubl
     free(solvey2);
 }
 
-void sturmLiouville(double p[], double p1[], double q[], double s[], double u0[2], double *u, double l, int n, double h)
-//求解sturm Liouville 方程, p p1 q s
+void sturmLiouville(double p[], double p1[], double q[], double s[], double u0[2], double *u, int n, double h)
+//求解sturm Liouville 方程, p p1 q s 为方程中的系数函数。u0为解的初始值,u保存解的结果,n为总的离散点数，h为间隔。
 {
     double h2 = h * h;
     *(u) = u0[0];
@@ -239,7 +239,7 @@ void sturmLiouville(double p[], double p1[], double q[], double s[], double u0[2
 }
 
 void Numerov(double q[], double s[], double u0[2], double *u, int n, double h)
-//求解sturm Liouville 方程, p p1 q s
+//Numerove方法求解 p(x)= 1 的 Liouville方程
 {
     double h2 = h * h;
     u[0] = u0[0];
@@ -257,7 +257,7 @@ void Numerov(double q[], double s[], double u0[2], double *u, int n, double h)
 
 static double *ur, *ul;
 static int nr, nl;
-
+static int findex;
 void wave(double (*v)(double, double[NPARS]), double pars[NPARS], double u0[2], double u[], double x0[2], double en, int n)
 {
     double y[n];
@@ -270,11 +270,12 @@ void wave(double (*v)(double, double[NPARS]), double pars[NPARS], double u0[2], 
         ql[i] = 2 * (en - v(x, pars));
         qr[n - i - 1] = ql[i];
         s[i] = 0;
+        y[i] = 0;
         //        printf("ql,v = %lf, %lf \n",ql[i],v(x,pars));
     }
 
-    int im = 0;
-    for (int i = 0; i < n - 1; i++)
+    int im = 1;
+    for (int i = 1; i < n - 1; i++)
     {
         if (((ql[i] * ql[i + 1]) < 0) && (ql[i] > 0))
         {
@@ -288,39 +289,63 @@ void wave(double (*v)(double, double[NPARS]), double pars[NPARS], double u0[2], 
     Numerov(qr, s, u0, ur, nr, h);
 
     double ratio = ur[nr - 2] / ul[im];
+#ifdef DEBUG
+    FILE *tmpfile;
+    char filename[512];
+    sprintf(filename,"tmp_wavef_%04d.txt",findex);
+    tmpfile = fopen(filename, "w");
+    fprintf(tmpfile,"#ratio is %15.7e \n", ratio);
+    fprintf(tmpfile,"#i   y[i]    u[i]    \n");
+#endif
     for (int i = 0; i < im + 1; i++)
     {
         u[i] = ratio * ul[i];
         y[i] = u[i] * u[i];
+#ifdef DEBUG
+    fprintf(tmpfile, "%3d  %15.7e \n",i, u[i]);
+#endif
     }
 
     for (int i = 0; i < nr - 1; i++)
     {
         u[i + im] = ur[nr - i - 2];
         y[i + im] = u[i + im] * u[i + im];
+#ifdef DEBUG
+    fprintf(tmpfile,"%3d  %15.7e \n",i+im, u[i+im]);
+#endif
     }
 
     double sum = SimpsonArray(y, n, h);
     sum = sqrt(sum);
-
     for (int i = 0; i < n; i++)
     {
         u[i] = u[i] / sum;
     }
+#ifdef DEBUG
+    fclose(tmpfile);
+#endif
 }
 
 void SolveSchroedingerEQ(double (*v)(double, double[NPARS]), double pars[NPARS], double u0[2], double u[], double e0[2], double en, int n, double x0[2])
 //求解一维薛定谔方程
 {
-    double del = 1e-6;
+    double del = 1e-8;
     double h = (x0[1] - x0[0]) / (n - 1);
 
     ur = (double *)malloc(sizeof(double) * n);
     ul = (double *)malloc(sizeof(double) * n);
     double f1, f2;
-    int step = 0, nmaxstep = 20;
+    int step = 0, nmaxstep = 1000;
+    findex=0;
     double en0 = e0[0], en1 = e0[1], deltaen;
     deltaen = en1 - en0;
+
+    for (int i = 0; i < n; i++)
+    {
+        ur[i] = 0.0;
+        ul[i] = 0.0;
+    }
+    
 
 #ifdef DEBUG
     printf("初始能量为 ：%lf,%lf \n", e0[0], e0[1]);
@@ -331,34 +356,42 @@ void SolveSchroedingerEQ(double (*v)(double, double[NPARS]), double pars[NPARS],
 #endif
 
     wave(v, pars, u0, u, x0, en0, n);
-    f1 = ur[nr-1] + ul[nl - 1] - ur[nr -3] - ul[nl -3];
-    f1 = f1 / (2 * h * ur[nr -2]);
-
-    printf("f1 的值为 %lf \n", f1);
+    f1 = ur[nr - 1] - ul[nl - 1] - ur[nr - 3] + ul[nl - 3];
+    f1 = f1 / (2 * h * ur[nr - 2]);
+#ifdef DEBUG
+    printf("dur 和 dul 的值为 %15.7e  ,%15.7e \n", (ur[nr-1]-ur[nr-3])/(2 * h),(ul[nl-1]-ul[nl-3])/(2 * h) );
+    printf("f1 ,ur[im] 的值为 %lf %lf\n", f1,ur[nr-2]);
     printf("nl , nr 的值为 %d  %d \n", nl, nr);
+#endif
     while ((fabs(deltaen) > del) && (step < nmaxstep))
     //割线法求解
     {
         wave(v, pars, u0, u, x0, en1, n);
-        f2 = ur[nr-1] + ul[nl - 1] - ur[nr -3] - ul[nl -3];
-        f2 = f1 / (2 * h * ur[nr -2]);
+        f2 = ur[nr - 1] - ul[nl - 1] - ur[nr - 3] + ul[nl - 3];
+        f2 = f2 / (2 * h * ur[nr - 2]);
+#ifdef DEBUG
+    printf("dur 和 dul 的值为 %15.7e  ,%15.7e \n", (ur[nr-1]-ur[nr-3])/(2 * h),(ul[nl-1]-ul[nl-3])/(2 * h) );
+    printf("f2 ,ur[im] 的值为 %lf %lf\n", f1,ur[nr-2]);
+    printf("nl , nr 的值为 %d  %d \n", nl, nr);
+#endif
 
         en = en1 - f2 * deltaen / (f2 - f1);
 
 #ifdef DEBUG
-        printf("第%d次迭代：nl,nr,f1,f2,en0,en1,en is %d, %d, %lf, %lf, %lf, %lf,%lf \n", step, nl, nr, f1, f2, en0, en1, en);
+        printf("第%d次迭代：nl,nr,f1,f2,en0,en1,en is %d, %d, %15.7e, %15.7e, %15.7e, %15.7e,%15.7e \n", step+1, nl, nr, f1, f2, en0, en1, en);
 #endif
         en0 = en1;
         en1 = en;
         f1 = f2;
         deltaen = en1 - en0;
         step++;
+        findex++;
     } //while
 
     printf("迭代次数为 %d \n", step);
     printf("能级为 %lf \n", en);
     free(ur);
     free(ul);
-    ur=NULL;
-    ul=NULL;
+    ur = NULL;
+    ul = NULL;
 }
